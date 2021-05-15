@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="Marek Cel" name="copyright">
+  
+  <title>World Geodetic System 1984 Calculator</title>
+  
+  <script src="js/calc_wgs84.js"></script>
+</head>
+
+<body>
+
+  <h1>World Geodetic System 1984 Calculator</h1>
+  
+  <table style="border: 0 solid black; margin: 0 auto; vertical-align: middle; border-spacing: 10pt; border-collapse: separate;">
+    <tbody>
+      
+      <tr>
+        <td colspan="3"><strong>Input Data:</strong></td>
+      </tr>
+      
+      <tr>
+        <td style="text-align: right;">WGS-X:</td>
+        <td><input type="number" id="inp_x" name="inp_x" min="-9999999" max="9999999" step="0.01" value="6378137" required></td>
+        <td>[m]</td>
+      </tr>
+      
+      <tr>
+        <td style="text-align: right;">WGS-Y:</td>
+        <td><input type="number" id="inp_y" name="inp_y" min="-9999999" max="9999999" step="0.01" value="0" required></td>
+        <td>[m]</td>
+      </tr>
+      
+      <tr>
+        <td style="text-align: right;">WGS-Z:</td>
+        <td><input type="number" id="inp_z" name="inp_z" min="-9999999" max="9999999" step="0.01" value="0" required></td>
+        <td>[m]</td>
+      </tr>
+      
+      <tr>
+        <td colspan="3"><strong>Output Data:</strong></td>
+      </tr>
+      
+      <tr>
+        <td style="text-align: right;">Longitude:</td>
+        <td style="text-align: right;" id="out_lon"></td>
+        <td>[&deg;]</td>
+      </tr>
+      
+      <tr>
+        <td style="text-align: right;">Latitude:</td>
+        <td style="text-align: right;" id="out_lat"></td>
+        <td>[&deg;]</td>
+      </tr>
+      
+      <tr>
+        <td style="text-align: right;">Altitude:</td>
+        <td style="text-align: right;" id="out_alt"></td>
+        <td>[m]</td>
+      </tr>
+      
+      <tr>
+        <td colspan="3"><button class="btn btn-primary btn-lg" onclick="calcXYZ2Geo();" style="width: 100%;">Calculate</button></td>
+      </tr>
+      
+    </tbody>
+  </table>
+  
+  <footer>
+    <p><a href="http://marekcel.pl/wgs84">http://marekcel.pl/wgs84</a></p>
+  </footer>
+  
+</body>
+  
+</html>
