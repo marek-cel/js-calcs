@@ -23,204 +23,142 @@
 /**
  * US Standard Atmosphere 1976, NASA/NOAA, TM-X-74335
  */
-class Atmosphere 
-{
-    constructor()
-    {
-        // [kg/kmol] molecular weight (US Standard Atmosphere 1976, Table 3, p.3)
-        this.m_i = [
-          28.0134,        // N2  - Nitrogen
-          31.9988,        // O2  - Oxygen
-          39.948,         // Ar  - Argon
-          44.00995,       // CO2 - Carbon Dioxide
-          20.183,         // Ne  - Neon
-          4.0026,         // He  - Helium
-          83.8,           // Kr  - Krypton
-          131.3,          // Xe  - Xenon
-          16.04303,       // CH4 - Methane
-          2.01594         // H2  - Hydrogen
-        ];
-        
-        // [-] fractional volume (US Standard Atmosphere 1976, Table 3, p.3)
-        this.f_i = [
-          0.78084,        // N2  - Nitrogen
-          0.209476,       // O2  - Oxygen
-          0.00934,        // Ar  - Argon
-          0.000314,       // CO2 - Carbon Dioxide
-          0.00001818,     // Ne  - Neon
-          0.00000524,     // He  - Helium
-          0.00000114,     // Kr  - Krypton
-          0.000000087,    // Xe  - Xenon
-          0.000002,       // CH4 - Methane
-          0.0000005       // H2  - Hydrogen
-        ];
+function calcAtmosphere( alt )
+{     
+    var m = 28.964507914535;  // [kg/kmol] mean molecular weight (28.964507914535)
     
-        // [kg/kmol] mean molecular weight (28.964507914535)
-        this.m =  
-              ( this.m_i[ 0 ] * this.f_i[ 0 ]
-              + this.m_i[ 1 ] * this.f_i[ 1 ]
-              + this.m_i[ 2 ] * this.f_i[ 2 ]
-              + this.m_i[ 3 ] * this.f_i[ 3 ]
-              + this.m_i[ 4 ] * this.f_i[ 4 ]
-              + this.m_i[ 5 ] * this.f_i[ 5 ]
-              + this.m_i[ 6 ] * this.f_i[ 6 ]
-              + this.m_i[ 7 ] * this.f_i[ 7 ]
-              + this.m_i[ 8 ] * this.f_i[ 8 ]
-              + this.m_i[ 9 ] * this.f_i[ 9 ] )
-              /
-              ( this.f_i[ 0 ]
-              + this.f_i[ 1 ]
-              + this.f_i[ 2 ]
-              + this.f_i[ 3 ]
-              + this.f_i[ 4 ]
-              + this.f_i[ 5 ]
-              + this.f_i[ 6 ]
-              + this.f_i[ 7 ]
-              + this.f_i[ 8 ]
-              + this.f_i[ 9 ] );  
-        
-        this.r     = 8.31432e3;   // [J/(kmol*K)] universal gas constant (US Standard Atmosphere 1976, Table 2, p.2)
-        this.s     = 110.0;       // [K] Sutherland constant             (US Standard Atmosphere 1976, Table 2, p.2)
-        this.beta  = 1.458e-6;    // [kg/(s*m*K^0.5)] a constant used in computing dynamic viscosity (US Standard Atmosphere 1976, Table 2, p.2)
-        this.gamma = 1.4;         // [-] a constant taken to represent the ratio of specific heat at constant pressure to the specific heat at constant volume (cp/cv) (US Standard Atmosphere 1976, Table 2, p.2)
-        this.wgs_g = 9.80665;     // [m/s^2] standard gravitional acceleration
-        
-        this.t_0   = 288.15;      // [K]      standard sea level temperature (288.15 K or 15 deg C)
-        this.p_0   = 101325.0;    // [Pa]     standard sea level pressure    (1013.25 hPa)
-        this.rho_0 = 1.225;       // [kg/m^3] standard sea level density     (1.225 kg/m^3)
-        
-        this.temp  = 0.0;         // [K]      temperature
-        this.press = 0.0;         // [Pa]     static pressure
-        this.dens  = 0.0;         // [kg/m^3] density
-        this.sound = 0.0;         // [m/s]    speed of sound
-        this.visc  = 0.0;         // [Pa*s]   dynamic viscosity
-        this.kinViscosity = 0.0;  // [m^2/s]  kinematic viscosity
-        
-        this.valid = false;
-        
-        // [m] altitude values (US Standard Atmosphere 1976, Table 4, p.3)
-        this.h_b = [
-          11000.0,
-          20000.0,
-          32000.0,
-          47000.0,
-          51000.0,
-          71000.0,
-          84852.0
-        ];
-        
-        // [Pa] pressure values (US Standard Atmosphere 1976, Table I, p.50-73)
-        this.p_b = [
-          101325.0,         // 11000
-          22632.0,          // 20000
-            5474.8,         // 32000
-            868.01,         // 47000
-            110.9,          // 51000
-              66.938,       // 71000
-              3.9564        // 84852
-        ];
-        
-        // [K] temperature values (US Standard Atmosphere 1976, Table I, p.50-73)
-        this.t_b = [
-            288.15,         // 11000
-            216.65,         // 20000
-            216.65,         // 32000
-            228.65,         // 47000
-            270.65,         // 51000
-            270.65,         // 71000
-            214.65          // 84852
-        ];
-        
-        // [K/m] temperature gradients (US Standard Atmosphere 1976, Table 4, p.3)
-        this.l_b = [
-            -6.5e-3,        // 11000
-            0.0,            // 20000
-            1.0e-3,         // 32000
-            2.8e-3,         // 47000
-            0.0,            // 51000
-            -2.8e-3,        // 71000
-            -2.0e-3         // 84852
-        ];
-    }
+    var r     = 8.31432e3;    // [J/(kmol*K)] universal gas constant (US Standard Atmosphere 1976, Table 2, p.2)
+    var s     = 110.0;        // [K] Sutherland constant             (US Standard Atmosphere 1976, Table 2, p.2)
+    var beta  = 1.458e-6;     // [kg/(s*m*K^0.5)] a constant used in computing dynamic viscosity (US Standard Atmosphere 1976, Table 2, p.2)
+    var gamma = 1.4;          // [-] a constant taken to represent the ratio of specific heat at constant pressure to the specific heat at constant volume (cp/cv) (US Standard Atmosphere 1976, Table 2, p.2)
+    var wgs_g = 9.80665;      // [m/s^2] standard gravitional acceleration
     
-    update( alt )
+    var t_0   = 288.15;       // [K]      standard sea level temperature (288.15 K or 15 deg C)
+    var p_0   = 101325.0;     // [Pa]     standard sea level pressure    (1013.25 hPa)
+    var rho_0 = 1.225;        // [kg/m^3] standard sea level density     (1.225 kg/m^3)
+    
+    var valid = false;
+      
+    var temp  = 1.0 / 0.0;
+    var press = 1.0 / 0.0;
+    var dens  = 1.0 / 0.0;
+    var sound = 1.0 / 0.0;
+    var visc  = 1.0 / 0.0;
+    var kinViscosity = 1.0 / 0.0;
+    
+    if ( alt <= 84852.0 )
     {
-        this.temp  = 0.0;
-        this.press = 0.0;
-        this.dens  = 0.0;
-        this.sound = 0.0;
-        this.visc  = 0.0;
-        this.kinViscosity = 0.0;
+        valid = true;
         
-        this.valid = false;
-        
-        if ( alt > this.h_b[ 6 ] )
-        {
-            return;
-        }
-        
-        var hb = this.h_b[ 5 ];
-        var pb = this.p_b[ 6 ];
-        var tb = this.t_b[ 6 ];
+        var hb = 0.0;
+        var pb = 0.0;
+        var tb = 0.0;
         var lb = 0.0;
         
-        if ( alt < this.h_b[ 0 ] )
+        // [m]   altitude values       (US Standard Atmosphere 1976, Table 4, p.3)
+        // [Pa]  pressure values       (US Standard Atmosphere 1976, Table I, p.50-73)
+        // [K]   temperature values    (US Standard Atmosphere 1976, Table I, p.50-73)
+        // [K/m] temperature gradients (US Standard Atmosphere 1976, Table 4, p.3)
+        if ( alt <= 11000  )
         {
             hb = 0.0;
-            pb = this.p_b[ 0 ];
-            tb = this.t_0;
-            lb = -( this.t_0 - this.t_b[ 1 ] ) / this.h_b[ 0 ];
             
-            this.valid = true;
+            pb = 101325.0;
+            
+            // const rate -6.5 K/km
+            tb = 288.15;
+            lb = -6.5e-3;
+        }
+        else if ( alt > 11000 && alt <= 20000  )
+        {
+            hb = 11000.0;
+            
+            pb = 22632.0;
+            
+            // const
+            tb = 216.65;
+            lb = 0.0;
+        }
+        else if ( alt > 20000 && alt <= 32000  )
+        {
+            hb = 20000.0;
+            
+            pb = 5474.8;
+            
+            // const rate +1.0 K/km
+            tb = 216.65;
+            lb = 1.0e-3;
+        }
+        else if ( alt > 32000 && alt <= 47000  )
+        {
+            hb = 32000.0;
+            
+            pb = 868.01;
+            
+            // const rate +2.8 K/km
+            tb = 228.65;
+            lb = 2.8e-3;
+        }
+        else if ( alt > 47000 && alt <= 51000  )
+        {
+            hb = 47000.0;
+            
+            pb = 110.9;
+            
+            // const
+            tb = 270.65;
+            lb = 0.0;
+        }
+        else if ( alt > 51000 && alt <= 71000  )
+        {
+            hb = 51000.0;
+            
+            pb = 66.938;
+            
+            // const rate -2.8 K/km
+            tb = 270.65;
+            lb = -2.8e-3; 
+        }
+        else if ( alt > 71000 && alt <= 84852  )
+        {
+            hb = 71000.0;
+            
+            pb = 3.9564;
+            
+            // const rate -2.0 K/km
+            tb = 214.65;
+            lb = -2.0e-3;
+        }
+        
+        var delta_h = alt - hb;
+
+        // [K] temperature, US Standard Atmosphere 1976, p.10
+        temp = tb + lb * delta_h;
+        
+        // [Pa] pressure, US Standard Atmosphere 1976, p.12
+        if ( Math.abs( lb ) < 1.0e-6 )
+        {
+            press = pb * Math.exp( -( wgs_g * m * delta_h ) / ( r * tb ) );
         }
         else
         {
-            for ( var i = 1; i < 7; i++ )
-            {
-                if ( alt < this.h_b[ i ] )
-                {
-                    hb = this.h_b[ i - 1 ];
-                    pb = this.p_b[ i ];
-                    tb = this.t_b[ i ];
-                    lb = this.l_b[ i ];
-                    
-                    this.valid = true;
-
-                    break;
-                }
-            }
+            press = pb * Math.pow( tb / temp, ( wgs_g * m ) / ( r * lb ) );
         }
-        
-        if ( this.valid )
-        {
-            var delta_h = alt - hb;
 
-            // [K] temperature, US Standard Atmosphere 1976, p.10
-            this.temp = tb + lb * delta_h;
-            
-            // [Pa] pressure, US Standard Atmosphere 1976, p.12
-            if ( Math.abs( lb ) < 1.0e-6 )
-            {
-                this.press = pb * Math.exp( -( this.wgs_g * this.m * delta_h ) / ( this.r * tb ) );
-            }
-            else
-            {
-                this.press = pb * Math.pow( tb / this.temp, ( this.wgs_g * this.m ) / ( this.r * lb ) );
-            }
+        // [kg/m^3] density, US Standard Atmosphere 1976, p.15
+        dens = ( press * m ) / ( r * temp );
 
-            // [kg/m^3] density, US Standard Atmosphere 1976, p.15
-            this.dens = ( this.press * this.m ) / ( this.r * this.temp );
+        // [m/s] speed of sound, US Standard Atmosphere 1976, p.18
+        sound = Math.sqrt( ( gamma * r * temp ) / m );
 
-            // [m/s] speed of sound, US Standard Atmosphere 1976, p.18
-            this.sound = Math.sqrt( ( this.gamma * this.r * this.temp ) / this.m );
+        // [Pa*s] dynamic viscosity, US Standard Atmosphere 1976, p.19
+        visc = beta * Math.pow( temp, 3.0 / 2.0 ) / ( temp + s );
 
-            // [Pa*s] dynamic viscosity, US Standard Atmosphere 1976, p.19
-            this.visc = this.beta * Math.pow( this.temp, 3.0 / 2.0 ) / ( this.temp + this.s );
-
-            // [m^2/s] kinematic viscosity, US Standard Atmosphere 1976, p.19
-            this.kinViscosity = this.visc / this.dens;
-        }
+        // [m^2/s] kinematic viscosity, US Standard Atmosphere 1976, p.19
+        kinViscosity = visc / dens;
     }
+    
+    return [ valid, temp, press, dens, sound, visc ];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -264,7 +202,7 @@ function calcAtmos()
     
     var prec_temp  = 2;
     var prec_press = 1;
-    var prec_dens  = 4;
+    var prec_dens  = 5;
     var prec_sound = 2;
     var prec_visc  = 6;
     
@@ -276,17 +214,21 @@ function calcAtmos()
     
     var alt_m = coef_alt * alt_raw;
     
-    var atmos = new Atmosphere();
-    atmos.update( parseFloat(alt_m) );
+    var result = calcAtmosphere( parseFloat(alt_m) );
     
-    var temp  = 1.0 / 0.0;
+    var valid = result[ 0 ];
+    var temp  = result[ 1 ];
+    var press = result[ 2 ];
+    var dens  = result[ 3 ];
+    var sound = result[ 4 ];
+    var visc  = result[ 5 ];
     
     switch ( unit_temp )
     {
-        case '1': temp = atmos.temp;        break;
-        case '2': temp = k2c( atmos.temp ); break;
-        case '3': temp = k2r( atmos.temp ); break;    
-        case '4': temp = k2f( atmos.temp ); break;
+        case '1': temp = temp;        break;
+        case '2': temp = k2c( temp ); break;
+        case '3': temp = k2r( temp ); break;    
+        case '4': temp = k2f( temp ); break;
     }
     
     switch ( unit_press )
@@ -315,14 +257,14 @@ function calcAtmos()
         case '1': coef_visc = 1.0;  break;
     }
     
-    if ( atmos.valid )
+    if ( valid )
     {
         document.getElementById( "calc_error" ).style.display = "none";
         
-        var press = coef_press * atmos.press;
-        var dens  = coef_dens  * atmos.dens;
-        var sound = coef_sound * atmos.sound;
-        var visc  = coef_visc  * atmos.visc;
+        press = coef_press * press;
+        dens  = coef_dens  * dens;
+        sound = coef_sound * sound;
+        visc  = coef_visc  * visc;
         
         document.getElementById( "out_temp"  ).innerHTML = temp  .toFixed( prec_temp  );
         document.getElementById( "out_press" ).innerHTML = press .toFixed( prec_press );
