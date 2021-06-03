@@ -9,9 +9,13 @@
   <script src="js/calc_atmos.js"></script>
 </head>
 
-<body>
+<body onload="calcAtmos();">
 
   <h1>US Standard Atmosphere 1976 Calculator</h1>
+  
+  <div id="calc_error" class="alert alert-danger" style="display: none;">
+    <p><strong>Error!</strong></p>
+  </div>
   
   <table style="border: 0 solid black; margin: 0 auto; vertical-align: middle; border-spacing: 10pt; border-collapse: separate;">
     <tbody>
@@ -22,9 +26,9 @@
       
       <tr>
         <td style="text-align: right;">Altitude:</td>
-        <td><input type="number" id="inp_alt" name="inp_alt" min="0" max="99999" value="0" required /></td>
+        <td><input type="number" id="inp_alt" name="inp_alt" min="0" max="99999" value="0" required onchange="calcAtmos();" /></td>
         <td>
-          <select id="unit_alt" name="unit_alt" style="width: 100%">
+          <select id="unit_alt" name="unit_alt" style="width: 100%" onchange="altUnitChanged();">
             <option value="1" selected>[m]</option>
             <option value="2">[ft]</option>
           </select>

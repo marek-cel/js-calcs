@@ -103,18 +103,22 @@ function rad2deg( ang )
 
 function calcGeo2XYZ()
 {
-    var inp_lon = document.getElementById( "inp_lon" ).value;
-    var inp_lat = document.getElementById( "inp_lat" ).value;
-    var inp_alt = document.getElementById( "inp_alt" ).value;
+    var inp_lon = parseFloat( document.getElementById( "inp_lon" ).value );
+    var inp_lat = parseFloat( document.getElementById( "inp_lat" ).value );
+    var inp_alt = parseFloat( document.getElementById( "inp_alt" ).value );
     
     if ( inp_lon < -180.0 || inp_lon > 180 || inp_lat < -90 || inp_lat > 90 )
     {
+        document.getElementById( "calc_error" ).style.display = "block";
+        
         document.getElementById( "out_x" ).innerHTML = "";
         document.getElementById( "out_y" ).innerHTML = "";
         document.getElementById( "out_z" ).innerHTML = "";
     }
     else
     {
+        document.getElementById( "calc_error" ).style.display = "none";
+        
         var inp_lon_rad = deg2rad( inp_lon );
         var inp_lat_rad = deg2rad( inp_lat );
         
@@ -127,9 +131,9 @@ function calcGeo2XYZ()
         var out_y = result[ 1 ];
         var out_z = result[ 2 ];
         
-        document.getElementById( "out_x" ).innerHTML = out_x;
-        document.getElementById( "out_y" ).innerHTML = out_y;
-        document.getElementById( "out_z" ).innerHTML = out_z;
+        document.getElementById( "out_x" ).innerHTML = out_x.toFixed(3);
+        document.getElementById( "out_y" ).innerHTML = out_y.toFixed(3);
+        document.getElementById( "out_z" ).innerHTML = out_z.toFixed(3);
     }
 }
 
@@ -137,9 +141,9 @@ function calcGeo2XYZ()
 
 function calcXYZ2Geo()
 {
-    var inp_x = document.getElementById( "inp_x" ).value;
-    var inp_y = document.getElementById( "inp_y" ).value;
-    var inp_z = document.getElementById( "inp_z" ).value;
+    var inp_x = parseFloat( document.getElementById( "inp_x" ).value );
+    var inp_y = parseFloat( document.getElementById( "inp_y" ).value );
+    var inp_z = parseFloat( document.getElementById( "inp_z" ).value );
     
     var wgs = new WGS84();
     var result = wgs.wgs2geo( parseFloat(inp_x),
@@ -150,7 +154,15 @@ function calcXYZ2Geo()
     var out_lon = rad2deg( result[ 1 ] );
     var out_alt = result[ 2 ];
     
-    document.getElementById( "out_lat" ).innerHTML = out_lat;
-    document.getElementById( "out_lon" ).innerHTML = out_lon;
-    document.getElementById( "out_alt" ).innerHTML = out_alt;
+    document.getElementById( "out_lat" ).innerHTML = out_lat.toFixed(6);
+    document.getElementById( "out_lon" ).innerHTML = out_lon.toFixed(6);
+    document.getElementById( "out_alt" ).innerHTML = out_alt.toFixed(3);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+function calcAllWGS()
+{
+    calcGeo2XYZ();
+    calcXYZ2Geo();
 }

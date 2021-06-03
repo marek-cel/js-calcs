@@ -9,9 +9,13 @@
   <script src="js/calc_wgs84.js"></script>
 </head>
 
-<body>
+<body onload="calcGeo2XYZ();">
 
   <h1>World Geodetic System 1984 Calculator</h1>
+  
+  <div id="calc_error" class="alert alert-danger" style="display: none;">
+    <p><strong>Error!</strong></p>
+  </div>
   
   <table style="border: 0 solid black; margin: 0 auto; vertical-align: middle; border-spacing: 10pt; border-collapse: separate;">
     <tbody>
@@ -22,19 +26,19 @@
       
       <tr>
         <td style="text-align: right;">Longitude:</td>
-        <td><input type="number" id="inp_lon" name="inp_lon" min="-180" max="180" step="0.000001" value="0" required></td>
+        <td><input type="number" id="inp_lon" name="inp_lon" min="-180" max="180" step="0.000001" value="0" required onchange="calcGeo2XYZ();"></td>
         <td>[&deg;]</td>
       </tr>
       
       <tr>
         <td style="text-align: right;">Latitude:</td>
-        <td><input type="number" id="inp_lat" name="inp_lat" min="-90" max="90" step="0.000001" value="0" required></td>
+        <td><input type="number" id="inp_lat" name="inp_lat" min="-90" max="90" step="0.000001" value="0" required onchange="calcGeo2XYZ();"></td>
         <td>[&deg;]</td>
       </tr>
       
       <tr>
         <td style="text-align: right;">Altitude:</td>
-        <td><input type="number" id="inp_alt" name="inp_alt" min="0" max="99999" step="0.01" value="0" required></td>
+        <td><input type="number" id="inp_alt" name="inp_alt" min="0" max="99999" step="0.01" value="0" required onchange="calcGeo2XYZ();"></td>
         <td>[m]</td>
       </tr>
       

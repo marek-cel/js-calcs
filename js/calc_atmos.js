@@ -247,7 +247,7 @@ function k2r( temp )
 
 function calcAtmos()
 {
-    var alt_raw = document.getElementById( "inp_alt" ).value;
+    var alt_raw = parseFloat( document.getElementById( "inp_alt" ).value );
     
     var unit_alt   = document.getElementById( "unit_alt"   ).value;
     var unit_temp  = document.getElementById( "unit_temp"  ).value;
@@ -261,6 +261,12 @@ function calcAtmos()
     var coef_dens  = 1.0;
     var coef_sound = 1.0;
     var coef_visc  = 1.0;
+    
+    var prec_temp  = 2;
+    var prec_press = 1;
+    var prec_dens  = 4;
+    var prec_sound = 2;
+    var prec_visc  = 6;
     
     switch ( unit_alt )
     {
@@ -285,10 +291,10 @@ function calcAtmos()
     
     switch ( unit_press )
     {
-        case '1': coef_press = 1.0;            break;
-        case '2': coef_press = 0.01;           break;
-        case '3': coef_press = 0.000295333727; break;
-        case '4': coef_press = 0.000145037738; break;
+        case '1': coef_press = 1.0;            prec_press = 1; break;
+        case '2': coef_press = 0.01;           prec_press = 3; break;
+        case '3': coef_press = 0.000295333727; prec_press = 5; break;
+        case '4': coef_press = 0.000145037738; prec_press = 5; break;
     }
     
     switch ( unit_dens )
@@ -298,10 +304,10 @@ function calcAtmos()
     
     switch ( unit_sound )
     {
-        case '1': coef_sound = 1.0;         break;
-        case '2': coef_sound = 3.2808399;   break;
-        case '3': coef_sound = 3.6;         break;
-        case '4': coef_sound = 1.943844491; break;
+        case '1': coef_sound = 1.0;         prec_sound = 2; break;
+        case '2': coef_sound = 3.2808399;   prec_sound = 1; break;
+        case '3': coef_sound = 3.6;         prec_sound = 1; break;
+        case '4': coef_sound = 1.943844491; prec_sound = 2; break;
     }
     
     switch ( unit_visc )
@@ -311,23 +317,51 @@ function calcAtmos()
     
     if ( atmos.valid )
     {
+        document.getElementById( "calc_error" ).style.display = "none";
+        
         var press = coef_press * atmos.press;
         var dens  = coef_dens  * atmos.dens;
         var sound = coef_sound * atmos.sound;
         var visc  = coef_visc  * atmos.visc;
         
-        document.getElementById( "out_temp"  ).innerHTML = temp;
-        document.getElementById( "out_press" ).innerHTML = press;
-        document.getElementById( "out_dens"  ).innerHTML = dens;
-        document.getElementById( "out_sound" ).innerHTML = sound;
-        document.getElementById( "out_visc"  ).innerHTML = visc;
+        document.getElementById( "out_temp"  ).innerHTML = temp  .toFixed( prec_temp  );
+        document.getElementById( "out_press" ).innerHTML = press .toFixed( prec_press );
+        document.getElementById( "out_dens"  ).innerHTML = dens  .toFixed( prec_dens  );
+        document.getElementById( "out_sound" ).innerHTML = sound .toFixed( prec_sound );
+        document.getElementById( "out_visc"  ).innerHTML = visc  .toExponential( prec_visc );
     }
     else 
     {
+        document.getElementById( "calc_error" ).style.display = "block";
+        
+        
         document.getElementById( "out_temp"  ).innerHTML = "";
         document.getElementById( "out_press" ).innerHTML = "";
         document.getElementById( "out_dens"  ).innerHTML = "";
         document.getElementById( "out_sound" ).innerHTML = "";
         document.getElementById( "out_visc"  ).innerHTML = "";
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+function altUnitChanged()
+{
+    var alt = document.getElementById( "inp_alt" ).value;
+    
+    var unit_alt = document.getElementById( "unit_alt" ).value;
+    
+    var coef_alt = 1.0;
+    
+    switch ( unit_alt )
+    {
+        case '1': coef_alt = 0.3048;       break;
+        case '2': coef_alt = 1.0 / 0.3048; break;
+    }
+    
+    alt = alt * coef_alt;
+    
+    document.getElementById( "inp_alt" ).value = alt.toFixed( 2 );
+  
+    calcAtmos();
 }

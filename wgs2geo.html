@@ -9,7 +9,7 @@
   <script src="js/calc_wgs84.js"></script>
 </head>
 
-<body>
+<body onload="calcXYZ2Geo();">
 
   <h1>World Geodetic System 1984 Calculator</h1>
   
@@ -22,19 +22,19 @@
       
       <tr>
         <td style="text-align: right;">WGS-X:</td>
-        <td><input type="number" id="inp_x" name="inp_x" min="-9999999" max="9999999" step="0.01" value="6378137" required></td>
+        <td><input type="number" id="inp_x" name="inp_x" min="-9999999" max="9999999" step="0.01" value="6378137" required onchange="calcXYZ2Geo();"></td>
         <td>[m]</td>
       </tr>
       
       <tr>
         <td style="text-align: right;">WGS-Y:</td>
-        <td><input type="number" id="inp_y" name="inp_y" min="-9999999" max="9999999" step="0.01" value="0" required></td>
+        <td><input type="number" id="inp_y" name="inp_y" min="-9999999" max="9999999" step="0.01" value="0" required onchange="calcXYZ2Geo();"></td>
         <td>[m]</td>
       </tr>
       
       <tr>
         <td style="text-align: right;">WGS-Z:</td>
-        <td><input type="number" id="inp_z" name="inp_z" min="-9999999" max="9999999" step="0.01" value="0" required></td>
+        <td><input type="number" id="inp_z" name="inp_z" min="-9999999" max="9999999" step="0.01" value="0" required onchange="calcXYZ2Geo();"></td>
         <td>[m]</td>
       </tr>
       
