@@ -20,14 +20,10 @@
  * IN THE SOFTWARE.
  ******************************************************************************/
 
-/*
- * Department of Defence World Geodetic System 1984, NIMA, TR-8350.2, 2000
- * Burtch R.: A Comparison of Methods Used in Rectangular to Geodetic Coordinate Transformations, 2006
- * Bowring B.: Transformation from spatial to geocentric coordinates, 1976
- * Zhu J.: Conversion of Earth-centered Earth-fixed coordinates to geodetic coordinates, 1994
+/**
+ * Converts geodetic coordinates into cartesian coordinates.
+ * @see Department of Defence World Geodetic System 1984, NIMA, TR-8350.2, 2000
  */
-    
-/** */
 function geo2wgs( lat, lon, alt )
 {
     var a   = 6378137.0;            // [m] equatorial radius
@@ -49,8 +45,14 @@ function geo2wgs( lat, lon, alt )
     
     return [ x, y, z ];
 }
+
+////////////////////////////////////////////////////////////////////////////////
     
-/** */
+/**
+ * Converts cartesian coordinates into geodetic coordinates.
+ * @see Department of Defence World Geodetic System 1984, NIMA, TR-8350.2, 2000
+ * @see Zhu J.: Conversion of Earth-centered Earth-fixed coordinates to geodetic coordinates, 1994
+ */
 function wgs2geo( x, y, z )
 {
     var a   = 6378137.0;            // [m] equatorial radius

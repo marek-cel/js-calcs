@@ -21,7 +21,8 @@
  ******************************************************************************/
 
 /**
- * US Standard Atmosphere 1976, NASA/NOAA, TM-X-74335
+ * Calculates atmosphere parameters.
+ * @see US Standard Atmosphere 1976, NASA/NOAA, TM-X-74335
  */
 function calcAtmosphere( alt )
 {     
